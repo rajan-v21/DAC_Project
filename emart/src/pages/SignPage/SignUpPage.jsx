@@ -33,7 +33,7 @@ function SignUpPage() {
     e.preventDefault();
 
     const { password, reEnterPassword } = formData;
-    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/;
+    const passwordPattern = /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/;
 
     if (!passwordPattern.test(password)) {
       setPasswordError('Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.');
@@ -58,15 +58,19 @@ function SignUpPage() {
         const { token, user } = response.data;
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
+        //navigate('/signin', { replace: true });
         navigate('/signin', { replace: true });
-        // navigate('/', { replace: true });
       } else {
         setPasswordError('SignUp Failed');
       }
 
     } catch (error) {
-      setPasswordError('Error occurred during signup. Please try again.');
-    }
+      if (error.response && error.response.status === 409) {
+          setPasswordError('User already exists');
+      } else {
+          setPasswordError('Error occurred during signup. Please try again.');
+      }
+  }
   };
 
   return (

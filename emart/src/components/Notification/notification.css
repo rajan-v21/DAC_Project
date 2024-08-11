@@ -9,10 +9,10 @@
     padding: 1rem;
     font-size: 1.2rem;
     z-index: 1000;
-    animation: slideIn 0.5s, slideOut 0.5s 2.5s;
+    animation: slideNotificationIN 0.5s, slideNotificationOUT 0.5s 2.5s;
   }
   
-  @keyframes slideIn {
+  @keyframes slideNotificationIN {
     from {
       transform: translateY(100%);
     }
@@ -21,7 +21,7 @@
     }
   }
   
-  @keyframes slideOut {
+  @keyframes slideNotificationOUT {
     from {
       transform: translateY(0);
     }

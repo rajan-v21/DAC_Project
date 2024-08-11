@@ -107,6 +107,7 @@ function ProductPage() {
             className='product-image'
             src={`${process.env.PUBLIC_URL}${product.imagepath}`}
             alt={`Product ${product.name}`}
+            //product.productname
           />
         </div>
         <div className="product-details">
