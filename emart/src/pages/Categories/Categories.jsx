@@ -11,8 +11,13 @@ const Categories = ({ onSelectCategory }) => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get('http://localhost:8080/category');
-        console.log('Categories fetched:', response.data); 
-        setCategories(response.data);
+        console.log('Categories fetched:', response.data); // Debug log
+
+        if (Array.isArray(response.data) && response.data.length > 0) {
+          setCategories(response.data);
+        } else {
+          console.warn('No categories found in response:', response.data);
+        }
       } catch (error) {
         console.error('Error fetching categories:', error);
       }

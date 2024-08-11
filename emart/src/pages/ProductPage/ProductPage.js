@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Form, Alert } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 import './productpage.css';
 import Header from '../../components/Header/Header';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
@@ -10,10 +11,7 @@ import Rating from '../../components/Rating/Rating';
 import Notification from '../../components/Notification/Notification';
 
 function ProductPage() {
-  let _isLoggedin = true;
-  let _userType = 1;
-  let _userCredits = 100;
-
+  const { isLoggedIn, userType, userCredits } = useAuth();
   const { productId } = useParams();
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState(null);
@@ -43,7 +41,7 @@ function ProductPage() {
 
   const handleAddToCart = () => {
     if (product) {
-      const price = (_isLoggedin && _userType === 1) ? 
+      const price = (isLoggedIn && userType === 1) ? 
                       product.isdiscounted === 1 ? 
                         product.price - product.price * 0.1 
                       :
@@ -57,15 +55,9 @@ function ProductPage() {
         ...product, 
         price, 
         key: `${product.productId}-${checkboxState}`, // Unique key for the cart item based on checkbox state
-        // appliedCredits: checkboxState ? _userCredits - 100 : 0; //if you decrementing credit on product page
         appliedCredits: checkboxState
       };
       addToCart(cartProduct);
-      // if (checkboxState) {
-      //   // Deduct credits
-      //   _userCredits -= 100;
-      //   localStorage.setItem('user', JSON.stringify({ ...user, epoint: _userCredits }));
-      // }
       setCheckboxState(false);
       setNotification({ message: 'Product successfully added to cart', show: true });
       setTimeout(() => setNotification({ ...notification, show: false }), 3000); // Hide after 3 seconds
@@ -84,10 +76,6 @@ function ProductPage() {
   }
 
   if (error) {
-    return <Alert variant="danger">Error loading products: {error.message}</Alert>;
-  }
-
-  if (!product) {
     return (
       <div>
         <Header />
@@ -98,6 +86,17 @@ function ProductPage() {
     );
   }
 
+  // if (!product) {
+  //   return (
+  //     <div>
+  //       <Header />
+  //       <div className="product-card">
+  //         <p>Product not found.</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
   return (
     <div>
       <Header />
@@ -106,12 +105,11 @@ function ProductPage() {
           <img
             className='product-image'
             src={`${process.env.PUBLIC_URL}${product.imagepath}`}
-            alt={`Product ${product.name}`}
-            //product.productname
+            alt={`Product ${product.productname}`}
           />
         </div>
         <div className="product-details">
-          <h1 id="product-name">{product.name}</h1>
+          <h1 id="product-name">{product.productname}</h1>
           <h2 id="product-description">({product.shortdesc}, {selectedStorage} GB)</h2>
           
           {product.stockQuantity === 0 ? 
@@ -120,7 +118,7 @@ function ProductPage() {
 
           <p><Rating value={product.rating} /></p>
           
-          {_isLoggedin && _userType === 1 ? 
+          {isLoggedIn && userType === 1 ? 
             (product.isdiscounted === 0)? (
               <div>
                 <p className='price-s'>₹{product.price}</p>

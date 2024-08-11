@@ -5,8 +5,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './signpage.css';
 
-///////////if user already exists stop sign up//////////
-
 function SignUpPage() {
   const [formData, setFormData] = useState({
     username: '',
@@ -33,7 +31,7 @@ function SignUpPage() {
     e.preventDefault();
 
     const { password, reEnterPassword } = formData;
-    const passwordPattern = /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/;
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/;
 
     if (!passwordPattern.test(password)) {
       setPasswordError('Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.');
@@ -58,8 +56,8 @@ function SignUpPage() {
         const { token, user } = response.data;
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
-        //navigate('/signin', { replace: true });
         navigate('/signin', { replace: true });
+        //navigate('/', { replace: true });
       } else {
         setPasswordError('SignUp Failed');
       }

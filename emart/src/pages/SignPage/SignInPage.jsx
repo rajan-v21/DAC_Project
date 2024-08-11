@@ -3,6 +3,7 @@ import { Container, Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import {jwtDecode} from 'jwt-decode';  // Importing jwtDecode
 import './signpage.css';
 
 function SignInPage() {
@@ -25,38 +26,34 @@ function SignInPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(''); // Clear previous errors
 
     try {
-      // First, check if the user exists
-      const emailCheckResponse = await axios.get(`http://localhost:8080/users`, {
-        params: {
-          useremail: formData.useremail,
-        },
-      });
-
-      if (emailCheckResponse.status === 404) {
-        setError('User doesn’t exist');
-        return;
-      }
-
-      // If the user exists, verify the password
-      const loginResponse = await axios.post('http://localhost:8080/users/login', {
-        useremail: formData.useremail,
+      // Attempt to login and obtain JWT token
+      const loginResponse = await axios.post('http://localhost:8080/public/token', {
+        email: formData.useremail,
         password: formData.password,
       });
 
       if (loginResponse.status === 200) {
-        const { token, user } = loginResponse.data;
-        // Save token and user information to local storage
+        const { token } = loginResponse.data;
+        // Decode the token to extract user information
+        const decodedToken = jwtDecode(token);
+
+        // Store token and user information in local storage
         localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('user', JSON.stringify(decodedToken));
+
         // Redirect to the home page
         navigate('/', { replace: true });
-      } else if (loginResponse.status === 401) {
-        setError('Wrong Password');
+        window.location.reload();
       }
     } catch (error) {
-      setError('Error occurred during signin. Please try again.');
+      if (error.response && error.response.status === 401) {
+        setError('Wrong password or user does not exist.');
+      } else {
+        setError('Error occurred during sign-in. Please try again.');
+      }
     }
   };
 

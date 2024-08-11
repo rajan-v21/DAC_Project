@@ -113,10 +113,10 @@ const ProductAllPage = () => {
                 <Card.Body>
                   <Row>
                     <Col md={3}>
-                      <Card.Img className='card-product-img' src={product.imagepath} alt={product.name} />
+                      <Card.Img className='card-product-img' src={product.imagepath} alt={product.productname} />
                     </Col>
                     <Col>
-                      <h4 id="product-name"><strong>{product.name}</strong></h4>
+                      <h4 id="product-name"><strong>{product.productname}</strong></h4>
                       <h5 id="product-description" style={{ color: "#a9a9a9" }}>({product.shortdesc})</h5>
                       <p className="fine-print">Brand: {product.brandname}</p>
 
