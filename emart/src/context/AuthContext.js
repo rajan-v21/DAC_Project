@@ -18,7 +18,6 @@ export const AuthProvider = ({ children }) => {
                 userid: decodedToken.userid,
                 useremail: decodedToken.useremail,
                 usertype: decodedToken.usertype,
-                // Add other details as needed
             });
         }
     }, []);

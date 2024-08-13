@@ -14,6 +14,8 @@ const ShoppingCart = () => {
   const { cartItems, incrementItem, decrementItem, removeFromCart } = useCart();
   const [notification, setNotification] = useState({ message: '', show: false });
 
+  // const { user } = useAuth(); // Access user data from context
+
   const _isLoggedin = true;
   const _userType = 1; 
   const _userCredits = 100; 

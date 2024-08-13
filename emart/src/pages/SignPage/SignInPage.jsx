@@ -3,7 +3,7 @@ import { Container, Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import {jwtDecode} from 'jwt-decode';  // Importing jwtDecode
+import jwtDecode from 'jwt-decode';  // Importing jwtDecode
 import './signpage.css';
 
 function SignInPage() {
@@ -31,22 +31,20 @@ function SignInPage() {
     try {
       // Attempt to login and obtain JWT token
       const loginResponse = await axios.post('http://localhost:8080/public/token', {
-        email: formData.useremail,
+        useremail: formData.useremail,  // Correcting typo here
         password: formData.password,
       });
 
       if (loginResponse.status === 200) {
-        const { token } = loginResponse.data;
-        // Decode the token to extract user information
-        const decodedToken = jwtDecode(token);
+        const { token, user } = loginResponse.data;
 
         // Store token and user information in local storage
         localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(decodedToken));
+        localStorage.setItem('user', JSON.stringify(user));
 
         // Redirect to the home page
         navigate('/', { replace: true });
-        window.location.reload();
+        window.location.reload();  // Reload to refresh user data
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {

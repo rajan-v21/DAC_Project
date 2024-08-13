@@ -11,7 +11,7 @@ import Rating from '../../components/Rating/Rating';
 import Notification from '../../components/Notification/Notification';
 
 function ProductPage() {
-  const { isLoggedIn, userType, userCredits } = useAuth();
+  // const { isLoggedIn, userType, userCredits } = useAuth();
   const { productId } = useParams();
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState(null);
@@ -20,6 +20,10 @@ function ProductPage() {
   const [checkboxState, setCheckboxState] = useState(false);
   const [error, setError] = useState(null);
   const [notification, setNotification] = useState({ message: '', show: false });
+
+  let isLoggedIn = true;
+  let userType = 1;
+  let userCredits = 100;
 
   useEffect(() => {
     async function fetchProduct() {
